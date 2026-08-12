@@ -2,42 +2,44 @@ import streamlit as st
 import pandas as pd
 from datetime import date
 
-st.set_page_config(page_title="EduAsistencia - Control de Asistencia", layout="wide")
+st.set_page_config(page_title="EduAsistencia Pro", layout="wide")
 
-st.markdown("""
-    <div style="background-color: #4A2E80; padding: 20px; border-radius: 10px; color: white;">
-        <h1>EduAsistencia</h1>
-        <p>Control Escolar - Nivel Secundaria</p>
-    </div>
-""", unsafe_allow_html=True)
+st.markdown("""<div style="background-color: #2E5A80; padding: 20px; border-radius: 10px; color: white;">
+    <h1>EduAsistencia Pro</h1>
+    <p>Sistema Integral de Gestión Escolar</p></div>""", unsafe_allow_html=True)
 
-tab1, tab2, tab3, tab4 = st.tabs(["Control de Asistencia", "Estudiantes", "Estadísticas", "Exportar y Reportes"])
+tab1, tab2, tab3, tab4 = st.tabs(["📊 Control", "👥 Estudiantes", "📈 Estadísticas", "📥 Reportes"])
+
+# Datos base
+data_est = {"N°": [1, 2, 3, 4, 5, 6], 
+            "Nombre": ["Juan Pérez", "María López", "Mercedes González", "Byron Trujillo", "David Cevallos", "Gonzalo Campoverde"],
+            "Estado": ["Presente", "Presente", "Presente", "Presente", "Presente", "Presente"]}
 
 with tab1:
     col1, col2, col3 = st.columns(3)
-    with col1: fecha_sel = st.date_input("FECHA", date.today())
-    with col2: grado_sel = st.selectbox("GRADO DE SECUNDARIA", ["1° Secundaria", "2° Secundaria", "3° Secundaria", "4° Secundaria", "5° Secundaria"], index=2)
-    with col3: seccion_sel = st.selectbox("SECCIÓN", ["Sección A", "Sección B", "Sección C", "Sección D"], index=2)
+    with col1: fecha = st.date_input("Fecha", date.today())
+    with col2: grado = st.selectbox("Grado", ["3° Secundaria"])
+    with col3: secc = st.selectbox("Sección", ["Sección C"])
+    
+    st.subheader("Nómina de Asistencia")
+    df = pd.DataFrame(data_est)
+    edited_df = st.data_editor(df, use_container_width=True)
+    if st.button("Guardar Asistencia del día"):
+        st.success("¡Asistencia guardada correctamente!")
 
-    col_btn1, col_btn2, col_btn3 = st.columns([1, 1, 2])
-    with col_btn1: st.button("✅ Todos Presentes")
-    with col_btn2: st.button("❌ Todos Faltaron")
-    with col_btn3: st.button("💾 Guardar Cambios")
+with tab2:
+    st.subheader("Gestión de Estudiantes")
+    st.table(pd.DataFrame(data_est)[["N°", "Nombre"]])
+    with st.expander("Agregar nuevo alumno"):
+        st.text_input("Nombre del alumno")
+        st.button("Registrar")
 
-    st.write("")
-    m1, m2, m3, m4 = st.columns(4)
-    with m1: st.metric(label="PRESENTES", value=1)
-    with m2: st.metric(label="TARDANZAS", value=0)
-    with m3: st.metric(label="JUSTIFICADOS", value=0)
-    with m4: st.metric(label="FALTAS", value=0)
+with tab3:
+    st.subheader("Estadísticas de Asistencia")
+    st.bar_chart(pd.DataFrame({"Asistencias": [5, 4, 6], "Faltas": [1, 2, 0]}, index=["Semana 1", "Semana 2", "Semana 3"]))
 
-    st.subheader("NÓMINA DE ASISTENCIA")
-    buscar = st.text_input("Buscar alumno...", placeholder="Escribe el nombre del alumno")
-    data = {
-        "N°": [1, 2, 3, 4, 5, 6, 7],
-        "Nombre": ["Juan Pérez", "María López", "MERCEDES GONZÁLEZ", "MARIA LOPEZ", "BYRON TRUJILLO", "DAVID CEVALLOS", "GONZALO CAMPOVERDE"],
-        "Estado": ["Asistió", "Faltó", "Asistió", "Falto", "Asistió", "Falto", "Asistió"]
-    }
-    df = pd.DataFrame(data)
-    if buscar: df = df[df["Nombre"].str.contains(buscar, case=False, na=False)]
-    st.data_editor(df, num_rows="dynamic", use_container_width=True)
+with tab4:
+    st.subheader("Exportar Reportes")
+    st.write("Descarga la nómina actual en formato Excel.")
+    csv = pd.DataFrame(data_est).to_csv(index=False)
+    st.download_button("Descargar Reporte CSV", csv, "reporte_asistencia.csv", "text/csv")
