@@ -4,13 +4,29 @@ from datetime import date
 
 st.set_page_config(page_title="Control de Asistencia - Secundaria", layout="wide")
 
-# Estilo visual superior idéntico
+# Estilos CSS personalizados para darle un toque más moderno y elegante ("más pituco")
 st.markdown("""
-    <div style="background-color: #3B2E5A; padding: 25px; border-radius: 12px; color: white; display: flex; justify-content: space-between; align-items: center;">
-        <div>
-            <h1 style="margin: 0; font-size: 26px;">EduAsistencia</h1>
-            <p style="margin: 0; opacity: 0.8;">Control Escolar - Nivel Secundaria</p>
-        </div>
+    <style>
+        .main { background-color: #f8f9fa; }
+        .stButton button {
+            border-radius: 8px;
+            font-weight: 600;
+        }
+        div[data-testid="stMetric"] {
+            background-color: white;
+            padding: 15px;
+            border-radius: 10px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+            border: 1px solid #e0e0e0;
+        }
+    </style>
+""", unsafe_allow_html=True)
+
+# Encabezado principal elegante
+st.markdown("""
+    <div style="background: linear-gradient(135deg, #4A2E80 0%, #6B48B3 100%); padding: 25px; border-radius: 12px; color: white; box-shadow: 0 4px 6px rgba(0,0,0,0.1);">
+        <h1 style="margin: 0; font-size: 26px; font-weight: 700;">EduAsistencia</h1>
+        <p style="margin: 0; opacity: 0.9; font-size: 14px;">Control Escolar - Nivel Secundaria</p>
     </div>
 """, unsafe_allow_html=True)
 
@@ -23,19 +39,19 @@ with tab1:
     with col2: grado_sel = st.selectbox("GRADO DE SECUNDARIA", ["1° Secundaria", "2° Secundaria", "3° Secundaria", "4° Secundaria", "5° Secundaria"], index=2)
     with col3: seccion_sel = st.selectbox("SECCIÓN", ["Sección A", "Sección B", "Sección C", "Sección D"], index=2)
 
-    col_btn1, col_btn2, col_btn3, col_btn4 = st.columns([1, 1, 1, 2])
+    col_btn1, col_btn2, col_btn3 = st.columns([1, 1, 2])
     with col_btn1: st.button("✅ Todos Presentes")
     with col_btn2: st.button("❌ Todos Faltaron")
     with col_btn3: st.button("💾 Guardar Cambios")
 
     st.write("")
     
-    # Métricas con estilo de tarjetas
+    # Tarjetas de métricas estilizadas
     m1, m2, m3, m4 = st.columns(4)
-    with m1: st.metric(label="🟢 PRESENTES", value=1)
-    with m2: st.metric(label="🟡 TARDANZAS", value=0)
-    with m3: st.metric(label="🔵 JUSTIFICADOS", value=0)
-    with m4: st.metric(label="🔴 FALTAS", value=0)
+    with m1: st.metric(label="PRESENTES", value=1)
+    with m2: st.metric(label="TARDANZAS", value=0)
+    with m3: st.metric(label="JUSTIFICADOS", value=0)
+    with m4: st.metric(label="FALTAS", value=0)
 
     st.write("")
     st.subheader("NÓMINA DE ASISTENCIA")
@@ -57,7 +73,7 @@ with tab2:
     st.table(pd.DataFrame({"Nombre": ["Juan Pérez", "María López", "Mercedes González", "Byron Trujillo", "David Cevallos", "Gonzalo Campoverde"]}))
 
 with tab3:
-    st.subheader("Estadísticas Generales")
+    st.subheader("Estadísticas de Asistencia")
     st.bar_chart(pd.DataFrame({"Asistencias": [5, 6, 4], "Faltas": [1, 0, 2]}, index=["Semana 1", "Semana 2", "Semana 3"]))
 
 with tab4:
